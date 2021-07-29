@@ -397,6 +397,35 @@ void cgc_init(void)
   cgc_printf("%s", welcome);
 }
 
+/* pp : function inserted from AIS-Lite and modified */
+int cgc_recv_until_delim(int fd, char* buf, cgc_size_t size, char delim) {
+    cgc_size_t bytes_read = 0;
+    cgc_size_t total_read = 0;
+
+    if (!size)
+        return -1;
+
+    if (!buf)
+        return -1;
+
+    while (size) {
+        if (cgc_receive(fd, buf++, 1, &bytes_read))
+            return -1;
+
+        total_read++;
+        size--;
+
+        if (*(buf - 1) == delim)
+            break;
+    }
+
+    if (*(buf - 1) != delim)
+        return -1;
+
+    return total_read;
+}
+/* pp */
+
 int main(int cgc_argc, char *cgc_argv[])
 {
 #define BUF_SIZE 8126
@@ -414,8 +443,13 @@ int main(int cgc_argc, char *cgc_argv[])
     cgc_print_prompt();
 
     cgc_memset(buf, '\0', BUF_SIZE + 1);
-    if ((cgc_readline(1, buf, BUF_SIZE, &rx) < 0) || rx == (cgc_size_t)NULL) {
-      // cgc_free(buf);
+    
+    /* pp */
+    /*if ((cgc_readline(1, buf, BUF_SIZE, &rx) < 0) || rx == (cgc_size_t)NULL) { */
+    rx = cgc_recv_until_delim(0, buf, BUF_SIZE, '\x0a');   //read from stdin insted, and function inserted from AIS-Lite
+    if( rx < 0){                                                                    
+    /* pp*/
+          // cgc_free(buf);
       free(buf);
       continue;
     }
