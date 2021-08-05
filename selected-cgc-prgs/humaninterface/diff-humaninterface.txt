@@ -1,0 +1,82 @@
+Checking libary first -----
+lib/calloc.c: * Permission is hereby granted, free of charge, to any person obtaining a copy
+lib/calloc.c:void *cgc_calloc(cgc_size_t nmemb, cgc_size_t size)
+lib/calloc.c:  void *ptr = cgc_malloc(tot);
+lib/cgc_malloc.h: * Permission is hereby granted, free of charge, to any person obtaining a copy
+lib/cgc_malloc.h:extern struct blk_t *cgc_free_lists[NUM_FREE_LISTS];
+lib/cgc_malloc.h:  unsigned int free;
+lib/cgc_stdint.h:typedef long intptr_t;
+lib/cgc_stdint.h:typedef unsigned long uintptr_t;
+lib/cgc_stdlib.h:extern void *cgc_malloc(cgc_size_t size);
+lib/cgc_stdlib.h:extern void *cgc_calloc(cgc_size_t nmemb, cgc_size_t size);
+lib/cgc_stdlib.h:extern void *cgc_realloc(void *ptr, cgc_size_t size);
+lib/cgc_stdlib.h:extern void cgc_free(void *ptr);
+lib/cgc_stdlib.h:extern cgc_size_t malloc_size(void *ptr);
+lib/ctype.c: * Permission is hereby granted, free of charge, to any person obtaining a copy
+lib/free.c: * Permission is hereby granted, free of charge, to any person obtaining a copy
+lib/free.c:#include "cgc_malloc.h"
+lib/free.c:static void cgc_free_huge(struct blk_t *blk)
+lib/free.c:void cgc_free(void *ptr)
+lib/free.c:  struct blk_t *blk = (struct blk_t *)((intptr_t)ptr - HEADER_PADDING);
+lib/free.c:  if (blk->free != 0)
+lib/free.c:    cgc_free_huge(blk);
+lib/malloc.c: * Permission is hereby granted, free of charge, to any person obtaining a copy
+lib/malloc.c:#include "cgc_malloc.h"
+lib/malloc.c:  new_blk->free = 1;
+lib/malloc.c:    *blk = cgc_free_lists[sc_i];
+lib/malloc.c:static void *cgc_malloc_huge(cgc_size_t size)
+lib/malloc.c:    blk->free = 0;
+lib/malloc.c:    return (void *)((intptr_t)blk + HEADER_PADDING);
+lib/malloc.c:void *cgc_malloc(cgc_size_t size)
+lib/malloc.c:    return cgc_malloc_huge(size);
+lib/malloc.c:      blk = cgc_free_lists[sc_i];
+lib/malloc.c:  /* Remove the block we're going to use from the free list */
+lib/malloc.c:    struct blk_t *nb = (struct blk_t *)((intptr_t)blk + size);
+lib/malloc.c:    nb->free = 1;
+lib/malloc.c:    /* Put the new block into the free list */
+lib/malloc.c:  return (void *)((intptr_t)blk + HEADER_PADDING);
+lib/malloc_common.c: * Permission is hereby granted, free of charge, to any person obtaining a copy
+lib/malloc_common.c:#include "cgc_malloc.h"
+lib/malloc_common.c:struct blk_t *cgc_free_lists[NUM_FREE_LISTS] = {0};
+lib/malloc_common.c:  blk->free = 1;
+lib/malloc_common.c:  if (cgc_free_lists[sc_i] == NULL) {
+lib/malloc_common.c:    cgc_free_lists[sc_i] = blk;
+lib/malloc_common.c:  blk->fsucc = cgc_free_lists[sc_i];
+lib/malloc_common.c:  cgc_free_lists[sc_i]->fpred = blk;
+lib/malloc_common.c:  cgc_free_lists[sc_i] = blk;
+lib/malloc_common.c:  if (cgc_free_lists[sc_i] == blk)
+lib/malloc_common.c:    cgc_free_lists[sc_i] = blk->fsucc;
+lib/malloc_common.c:  blk->free = 0;
+lib/malloc_common.c:  /* prev and next are free */
+lib/malloc_common.c:  if (blk->prev && blk->prev->free && blk->next && blk->next->free) {
+lib/malloc_common.c:  /* Just prev is free */
+lib/malloc_common.c:  } else if (blk->prev && blk->prev->free && blk->next && !blk->next->free) {
+lib/malloc_common.c:  /* Just next is free */
+lib/malloc_common.c:  } else if (blk->prev && !blk->prev->free && blk->next && blk->next->free) {
+lib/memchr.c: * Permission is hereby granted, free of charge, to any person obtaining a copy
+lib/memchr.c:      return (void *)((intptr_t)s + i);
+lib/memcmp.c: * Permission is hereby granted, free of charge, to any person obtaining a copy
+lib/memcpy.c: * Permission is hereby granted, free of charge, to any person obtaining a copy
+lib/memset.c: * Permission is hereby granted, free of charge, to any person obtaining a copy
+lib/printf.c: * Permission is hereby granted, free of charge, to any person obtaining a copy
+lib/realloc.c: * Permission is hereby granted, free of charge, to any person obtaining a copy
+lib/realloc.c:#include "cgc_malloc.h"
+lib/realloc.c:void *cgc_realloc(void *ptr, cgc_size_t size)
+lib/realloc.c:    return cgc_malloc(size);
+lib/realloc.c:    cgc_free(ptr);
+lib/realloc.c:  void *new = cgc_malloc(size);
+lib/realloc.c:  struct blk_t *blk = (struct blk_t *)((intptr_t)ptr - HEADER_PADDING);
+lib/realloc.c:  cgc_free(ptr);
+lib/strchr.c: * Permission is hereby granted, free of charge, to any person obtaining a copy
+lib/strcmp.c: * Permission is hereby granted, free of charge, to any person obtaining a copy
+lib/strcpy.c: * Permission is hereby granted, free of charge, to any person obtaining a copy
+lib/strlen.c: * Permission is hereby granted, free of charge, to any person obtaining a copy
+lib/strsep.c: * Permission is hereby granted, free of charge, to any person obtaining a copy
+lib/strtol.c: * Permission is hereby granted, free of charge, to any person obtaining a copy
+
+Checking src then ------
+src/link.c: * Permission is hereby granted, free of charge, to any person obtaining a copy
+src/main.c: * Permission is hereby granted, free of charge, to any person obtaining a copy
+src/main.c:    cgc_free(hdrdata);
+src/session.c: * Permission is hereby granted, free of charge, to any person obtaining a copy
+src/session.c:    cgc_free(resp);
